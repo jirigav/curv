@@ -28,7 +28,7 @@ pub struct Secp256r1Scalar {
     fe: SK,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug)]
 pub struct Secp256r1Point {
     purpose: &'static str,
     ge: PK,
@@ -233,6 +233,12 @@ impl Zeroize for Secp256r1Point {
         unsafe { ptr::write_volatile(self, GE::generator()) };
         atomic::fence(atomic::Ordering::SeqCst);
         atomic::compiler_fence(atomic::Ordering::SeqCst);
+    }
+}
+
+impl PartialEq for Secp256r1Point {
+    fn eq(&self, other: &GE) -> bool {
+        self.ge == other.ge
     }
 }
 
